@@ -1,0 +1,3 @@
+[submodule "NotefulApp"]
+	path = NotefulApp
+	url = https://github.com/tcgronk/NotefulApp.git
