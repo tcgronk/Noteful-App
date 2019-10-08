@@ -68,7 +68,7 @@ export default class AddFolder extends React.Component {
     e.preventDefault();
     const folder = (({folder}) => ({folder}))(this.state);
     this.setState({error: null})
-    const url =`${config.API_ENDPOINT}/api/folders`
+    const url =`${config.API_ENDPOINT}/folders`
     const options = {
       method: 'POST',
       body: JSON.stringify(folder),

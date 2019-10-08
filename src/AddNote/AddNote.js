@@ -94,7 +94,7 @@ formValid() {
         modified: new Date()
     }
     this.setState({error: null})
-    const url =`${config.API_ENDPOINT}/api/notes`
+    const url =`${config.API_ENDPOINT}/notes`
     const options = {
       method: 'POST',
       body: JSON.stringify(note),

@@ -51,33 +51,28 @@ class App extends Component {
         });
     };
 
-    componentDidMount(){
-		const notesRes = fetch(`${config.API_ENDPOINT}/notes`, {
-				method:'GET',
-			});
-		const foldersRes = fetch(`${config.API_ENDPOINT}/folders`, {
-				method:'GET',
-            });
-        
-		Promise.all([notesRes, foldersRes])
-		.then (responses => Promise.all(responses.map(res => res.text())))
-        .then(text=>console.log(text))
-		Promise.all([
-			fetch(`${config.API_ENDPOINT}/notes`),
+
+    componentDidMount() {
+        Promise.all([
+            fetch(`${config.API_ENDPOINT}/notes`),
             fetch(`${config.API_ENDPOINT}/folders`)
         ])
+            .then(([notesRes, foldersRes]) => {
+                if (!notesRes.ok)
+                    return notesRes.json().then(e => Promise.reject(e));
+                if (!foldersRes.ok)
+                    return foldersRes.json().then(e => Promise.reject(e));
+
+                return Promise.all([notesRes.json(), foldersRes.json()]);
+            })
+            .then(([notes, folders]) => {
+                this.setState({notes, folders});
+            })
+            .catch(error => {
+                console.error({error});
+            });
         
-		.then (([noteRes, folderRes]) => {
-			return Promise.all([
-				noteRes.json(),
-				folderRes.json(),
-				])
-		})
-		.then(([notes, folders]) => {
-			this.setState({ notes, folders })
-        })
-        
-	}
+    }
 
     
 
