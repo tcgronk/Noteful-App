@@ -21,7 +21,7 @@ class App extends Component{
         notes: [],
         folders: [], 
         showAddForm: false,
-        errorBoundaryKey: 0,
+       
         }
     };
 
@@ -123,7 +123,7 @@ class App extends Component{
                     />
                 ))}
 
-                <ErrorBoundary key={this.state.errorBoundaryKey}>
+                <ErrorBoundary >
                 <Route path="/note/:noteId" component={NotePageMain} />
                 </ErrorBoundary>
                 <Route path="/add-folder" component={AddFolder} />
