@@ -10,7 +10,7 @@ export default class AddNote extends React.Component {
     this.state = {
       push : () => {},
       note: {
-      title: "",
+      name: "",
       content: "",
       folderId:"",
       formValid: false, 
@@ -20,14 +20,17 @@ export default class AddNote extends React.Component {
       validationMessage: ''
       }
     };
+    this.updateFormEntry = this.updateFormEntry.bind(this);
+
   }
 
   static contextType = ApiContext
 
 
 
+
   updateFormEntry(e) {       
-    const name = e.target.folderSelect;
+    let name = e.target.name;
     const value = e.target.value;
     let id;
     if (e.target.selectedOptions) {
@@ -44,10 +47,11 @@ export default class AddNote extends React.Component {
 
 validateEntry(name, value) {
     let hasErrors = false;
-
     value = value.trim();
-    if((name === 'title') || (name === 'content')) {
+    
+    if((name === 'note') || (name === 'content')) {
         if (value.length < 1) {
+          console.log(value.length)
             hasErrors = true
         } 
 
@@ -55,44 +59,43 @@ validateEntry(name, value) {
             hasErrors = false
         }
     }
-    
-    else if((name === 'folderSelect') && (value === 'Select')) {
-        hasErrors = true
-    }
-    
+        
     else {
         hasErrors = false
     }
     
     this.setState({
-        [`${name}Valid`]: !hasErrors,
+        [`${name}Valid`]: hasErrors,
     }, this.formValid() );
+    
 }
 
 formValid() {
-    const { titleValid, contentValid, folderSelectValid } = this.state;
-    if (titleValid && contentValid && folderSelectValid === true){
+    const { noteValid, contentValid } = this.state;
+    console.log(noteValid)
+    console.log(contentValid)
+  
+    if ((noteValid=== false) && (contentValid===false)){
         this.setState({
             formValid: true,
-            validationMessage: "Note Saved"
         });
     }
     else {this.setState({
-        formValid: !this.formValid,
-        validationMessage: 'All fields are required.'
+        formValid: false,
     })}
+    console.log(this.state.formValid)
   }
  
-
+  
   handleSubmit(e) {
     e.preventDefault();
-    const { title, content, folderId } = this.state;
     const note = {
-        title: title,
-        content: content,
-        folder_id: folderId,
+        name: e.target['note'].value,
+        content: e.target['content'].value,
+        folderId: e.target['folderSelect'].value,
         modified: new Date()
     }
+    console.log(note)
     this.setState({error: null})
     const url =`${config.API_ENDPOINT}/notes`
     const options = {
@@ -102,7 +105,8 @@ formValid() {
         "Content-Type": "application/json",
       }
     };
-
+    console.log(this.state.formValid)
+    if(this.state.formValid===true){
     fetch(url, options)
       .then(res => {
         if(!res.ok) {
@@ -110,14 +114,23 @@ formValid() {
         }
         return res.json();
       })
-      .then(data => {
-        this.context.addNote(data);
+      
+      .then(note => {
+        this.context.handleAddNote(note);
+
+        this.props.history.push(`/folder/${note.folderId}`)
+        console.log('saved')
       })
       .catch(err => {
         this.setState({
           error: err.message
         });
       });
+    } 
+    else (this.setState({
+      validationMessage: `${" "}Please ensure you have entered a folder name, note content, and selected a folder from the drop down.`
+    }))
+  
   }
 
   
@@ -135,7 +148,7 @@ formValid() {
       return(
         <option
           key= {folder.id}
-          id = {folder.id}>
+          value = {folder.id}>
           {folder.name}
         </option>
       )
@@ -155,6 +168,7 @@ formValid() {
             name="note"
             id="note"
             placeholder="Note Name"
+            value={this.state.name}
             onChange={e => this.updateFormEntry(e)}/>
           <label htmlFor="content"><br />Note: {" "}<br/></label>
             <textarea 
@@ -162,6 +176,7 @@ formValid() {
                 name="content" 
                 id="content"
                 placeholder="Note content"
+                value={this.state.content}
                 onChange={e => this.updateFormEntry(e)}/>
           <label htmlFor="folder-select"><br/>Folder:{" "}<br/></label>
             <select
@@ -171,12 +186,12 @@ formValid() {
             id='folderSelect'
             ref={this.folderSelect}
             onChange={e => this.updateFormEntry(e)}>
-                <option>Select Folder</option>
+                <option value={null}>Select Folder</option>
                 { options }
             </select>
           <div className="addnote__buttons">
             <button type='button' onClick={e => this.handleCancelAdd()}>Cancel</button>
-            <button type="submit"  disabled={this.state.formValid} >Save</button>
+            <button type="submit"   >Save</button>
           {message}
           </div>  
         </form>
@@ -186,9 +201,9 @@ formValid() {
 }
 
 AddNote.propTypes ={
-  title: PropTypes.string,
+  name: PropTypes.string,
   content: PropTypes.string,
-  folder_id: PropTypes.string,
+  folderId: PropTypes.string,
   formValid: PropTypes.bool,
   titleValid: PropTypes.bool,
   contentValid: PropTypes.bool,

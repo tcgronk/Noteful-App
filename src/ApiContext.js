@@ -3,8 +3,8 @@ import React from 'react'
 export default React.createContext({
   notes: [],
   folders: [],
-  addFolder: () => {},
-  addNote: () => {},
+  handleAddFolder: () => {},
+  handleAddNote: () => {},
   handleDeleteNote: () => {},
-  setShowAddForm: () =>{}
+  setShowAddForm: () => {}
 })

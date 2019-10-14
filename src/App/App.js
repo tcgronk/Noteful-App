@@ -14,14 +14,19 @@ import AddFolder from '../AddFolder/AddFolder';
 import ErrorBoundary from '../ErrorBoundary'
 
 
-class App extends Component {
-    state = {
-        notes: [{"name": 'note1',  "modified": '6 Oct 2019',"id":"a2", "content":'hi',"folderId":"a1"}],
-        folders: [{"id":"a1", "name":"Tess"}], 
+class App extends Component{ 
+    constructor(props){
+        super(props);
+        this.state = {
+        notes: [],
+        folders: [], 
         showAddForm: false,
         errorBoundaryKey: 0,
-
+        }
     };
+
+    static contextType = ApiContext
+
 
     setShowAddForm(show) {
         this.setState({
@@ -29,23 +34,12 @@ class App extends Component {
         });
       }
 
-    addFolder(folder){
-        this.setState({
-            folders: [...this.state.folders, folder],
-            showAddForm: true
-            
-        })
-    };
 
-    addNote = note => {
-        this.setState({
-          notes: [...this.state.notes, note]
-        });
-      };
 
     
 
     handleDeleteNote = noteId => {
+        console.log(this.state.notes)
         this.setState({
             notes: this.state.notes.filter(note => note.id !== noteId)
         });
@@ -67,16 +61,37 @@ class App extends Component {
             })
             .then(([notes, folders]) => {
                 this.setState({notes, folders});
+                console.log(notes)
+                console.log(folders)
             })
             .catch(error => {
                 console.error({error});
             });
         
-    }
+        }
 
+    handleAddFolder= folder => {
+        this.setState({
+            folders: [
+                      ...this.state.folders, 
+                      folder
+                   ],
+              showAddForm: true
+          });
+    };
     
 
-  
+    handleAddNote=note =>  {
+        
+        this.setState({
+          notes: [
+                    ...this.state.notes, 
+                    note
+                 ],
+            showAddForm: true
+        });
+
+      };
 
     renderNavRoutes() {
         return (
@@ -123,7 +138,8 @@ class App extends Component {
                 notes: this.state.notes,
                 folders: this.state.folders,
                 deleteNote: this.handleDeleteNote,
-                addFolder: this.addFolder,
+                handleAddFolder: this.handleAddFolder,
+                handleAddNote: this.handleAddNote
             }}>
             <div className="App">
                 <nav className="App__nav">{this.renderNavRoutes()}</nav>

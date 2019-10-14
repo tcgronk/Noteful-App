@@ -3,70 +3,79 @@ import config from '../config'
 import ApiContext from '../ApiContext'
 import './AddFolder.css'
 
+
 export default class AddFolder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      folder: "",
+      folders:[],
+      id:"",
+      name: "",
       hasErrors: true,
       formValid:false ,
       validationMessage: "",
       push : () => {},
       
     };
+    this.nameChanged = this.nameChanged.bind(this)
   }
 
   static contextType = ApiContext
  
 
   nameChanged(e) {           
-    const name = e.target.folder;
-    const value = e.target.value;
+    const name = e.target.value;
+    console.log(name)
     this.setState({
-        [e.target.name]: e.target.value
-    }, () => {this.validateEntry(name, value)});
+        value: name,
+    }, () => {this.validateEntry(name)});
 }
 
-  validateEntry(name, value) {
-      let inputErrors;
-      let hasErrors = this.state.hasErrors;
-
-      value = value.trim();
-      if (value < 1) {
-          inputErrors = `${name} is required.`;
+  validateEntry(name) {
+    let inputErrors="";
+    let hasErrors = this.state.hasErrors;
+    // let foldersArr=this.context.folders
+    let length = name.trim();
+  
+    // let duplicate= false
+    // for(let i=0; i<foldersArr.length; i++){
+    //   if(name===foldersArr[i].name){
+    //     duplicate=true;
+    //   }
     
-      } 
+    // if(duplicate=true){
+    //   inputErrors='Folder name must be unique'
+    //   hasErrors=true;
+    // }
+    //   else duplicate=false;
+    // }
       
-      else {
-          inputErrors = 'Saved';
-          hasErrors = false;
+      if (length.length < 1) {
+          inputErrors = `Folder Name must be at least 1 character.`;
+          hasErrors=true;
+    
       }
+      
+     
+      else {inputErrors = 'Valid Entry';
+      hasErrors = false}
+
+     
       this.setState({
           validationMessage: inputErrors,
-          [`${name}Valid`]: !hasErrors,
-          hasErrors: !hasErrors
-      }, this.formValid );
+          hasErrors: hasErrors,
+      })
   }
 
-  formValid() {
-      const { titleValid } = this.state;
-      if (titleValid === true){
-          this.setState({
-              formValid: true
-          });
-      }
-      else {this.setState({
-          formValid: !this.formValid
-          }
-      )}
+
+    handleCancelAdd = () => {
+      this.props.history.push(`/`)
     }
-
-
-
+  
 
   handleSubmit(e) {
     e.preventDefault();
-    const folder = (({folder}) => ({folder}))(this.state);
+    const folder = {name:e.target['folder'].value}
     this.setState({error: null})
     const url =`${config.API_ENDPOINT}/folders`
     const options = {
@@ -76,43 +85,38 @@ export default class AddFolder extends React.Component {
         "Content-Type": "application/json",
       }
     };
-
+    
+    if(this.state.hasErrors===false){
     fetch(url, options)
-      
+      .then(console.log(url,options))
       .then(res => {
         if(!res.ok) {
           throw new Error('Something went wrong, please try again later');
         }
         return res.json();
       })
+     
       
-      .then(data => {
-        this.setState({
-          name: "",
-        });
-        this.context.addFolder(data);
-      })
+      .then(folder => {
+          this.context.handleAddFolder(folder);
+          this.props.history.push(`/folder/${folder.id}`)
+          console.log("saved")
+        })
       .catch(err => {
         this.setState({
           error: err.message
         });
       });
   }
+  else( this.setState({
+    validationMessage: `Unable to save: ${this.state.validationMessage}`}))
+}
 
-  handleCancelAdd = () => {
-    this.props.history.push(`/`)
-  }
-
-  //   componentDidMount() {
-  //     // fake date loading from API call
-  //     setTimeout(() => this.setState(dummyStore), 600);
-  // }
+ 
 
 
   render() {
-    const error = this.state.error
-          ? <div className="error">{this.state.error}</div>
-          : "";
+    const error = this.state.validationMessage
     
 
     return (
@@ -122,6 +126,7 @@ export default class AddFolder extends React.Component {
         <form className="addfolder__form" onSubmit={e => this.handleSubmit(e)}>
           <label htmlFor="folderName">Folder Name:{" "}</label>
           <input
+            required
             type="text"
             name="folder"
             id="folder"
@@ -130,7 +135,7 @@ export default class AddFolder extends React.Component {
             onChange={e => this.nameChanged(e)}/>
 
           <div className="addfolder__buttons">
-
+            
           
             <button type='button' onClick={e => this.handleCancelAdd()}>Cancel</button>
             <button type="submit" disabled={this.state.formValid} >Save</button>
