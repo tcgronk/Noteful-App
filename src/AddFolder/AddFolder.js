@@ -17,13 +17,14 @@ export default class AddFolder extends React.Component {
       push : () => {},
       
     };
-    this.nameChanged = this.nameChanged.bind(this)
+    // this.nameChanged = this.nameChanged.bind(this)
   }
 
   static contextType = ApiContext
  
 
-  nameChanged(e) {           
+  nameChanged = (e) => { 
+            
     const name = e.target.value;
     console.log(name)
     this.setState({
@@ -34,9 +35,14 @@ export default class AddFolder extends React.Component {
   validateEntry(name) {
     let inputErrors="";
     let hasErrors = this.state.hasErrors;
-    // let foldersArr=this.context.folders
     let length = name.trim();
-  
+
+    this.setState({
+      validationMessage: "",
+      hasErrors: hasErrors,
+   })
+    
+    // let foldersArr=this.context.folders
     // let duplicate= false
     // for(let i=0; i<foldersArr.length; i++){
     //   if(name===foldersArr[i].name){
@@ -104,7 +110,7 @@ export default class AddFolder extends React.Component {
         })
       .catch(err => {
         this.setState({
-          error: err.message
+          validationMessage: err.message
         });
       });
   }

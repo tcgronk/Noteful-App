@@ -20,7 +20,7 @@ export default class AddNote extends React.Component {
       validationMessage: ''
       }
     };
-    this.updateFormEntry = this.updateFormEntry.bind(this);
+    // this.updateFormEntry = this.updateFormEntry.bind(this);
 
   }
 
@@ -29,7 +29,7 @@ export default class AddNote extends React.Component {
 
 
 
-  updateFormEntry(e) {       
+  updateFormEntry = (e) => {       
     let name = e.target.name;
     const value = e.target.value;
     let id;
