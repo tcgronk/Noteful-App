@@ -2,4 +2,14 @@ div{
     color: white;
     margin: auto;
 }
-
+.addfolder{
+    margin-left: 100px;
+}
+form,input, button{
+    font-size: 18px;
+}
+.addfolder__buttons>button{
+    margin-top: 18px;
+    margin-right: 12px;
+    border-radius: 2px;
+}

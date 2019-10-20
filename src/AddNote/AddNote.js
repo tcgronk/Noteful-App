@@ -2,7 +2,7 @@ import React from  'react';
 import config from '../config'
 import ApiContext from '../ApiContext'
 import PropTypes from 'prop-types';
-
+import './AddNote.css'
 
 export default class AddNote extends React.Component {
   constructor(props) {
