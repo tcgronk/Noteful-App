@@ -2,6 +2,7 @@ import React from  'react';
 import config from '../config'
 import ApiContext from '../ApiContext'
 import PropTypes from 'prop-types';
+import './AddNote.css'
 
 
 export default class AddNote extends React.Component {
@@ -20,7 +21,6 @@ export default class AddNote extends React.Component {
       validationMessage: ''
       }
     };
-    // this.updateFormEntry = this.updateFormEntry.bind(this);
 
   }
 
@@ -170,6 +170,7 @@ formValid() {
             placeholder="Note Name"
             value={this.state.name}
             onChange={e => this.updateFormEntry(e)}/>
+          <br/>
           <label htmlFor="content"><br />Note: {" "}<br/></label>
             <textarea 
                 className="field"
@@ -178,6 +179,7 @@ formValid() {
                 placeholder="Note content"
                 value={this.state.content}
                 onChange={e => this.updateFormEntry(e)}/>
+          <br/>
           <label htmlFor="folder-select"><br/>Folder:{" "}<br/></label>
             <select
             type='text'
@@ -190,8 +192,10 @@ formValid() {
                 { options }
             </select>
           <div className="addnote__buttons">
+            <br/>
             <button type='button' onClick={e => this.handleCancelAdd()}>Cancel</button>
-            <button type="submit"   >Save</button>
+            <span>{' '}</span>
+            <button type="submit">Save</button>
           {message}
           </div>  
         </form>

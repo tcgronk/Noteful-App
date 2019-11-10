@@ -1,5 +1,20 @@
 div{
     color: white;
     margin: auto;
+
 }
 
+.addfolder__buttons>button,.addnote__buttons>button{
+    font-size: 20px
+} 
+form, form>input, form>button, form>select, form>textarea{
+    font-size:20px;
+    text-align: center
+}
+.addfolder__form>ul{
+    list-style-type: none
+}
+
+.addfolder__form>input, .addnote__form>input{
+    text-align: initial
+}

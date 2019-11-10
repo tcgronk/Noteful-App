@@ -6,11 +6,11 @@ export default {
     },
     {
       "id": "b07161a6-ffaf-11e8-8eb2-f2801f1b9fd1",
-      "name": "Super"
+      "name": "Save for later"
     },
     {
       "id": "b07162f0-ffaf-11e8-8eb2-f2801f1b9fd1",
-      "name": "Spangley"
+      "name": "Study"
     }
   ],
   "notes": [
