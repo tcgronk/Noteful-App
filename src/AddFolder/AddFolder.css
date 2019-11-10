@@ -18,3 +18,14 @@ form, form>input, form>button, form>select, form>textarea{
 .addfolder__form>input, .addnote__form>input{
     text-align: initial
 }
+.addfolder{
+    margin-left: 100px;
+}
+form,input, button{
+    font-size: 18px;
+}
+.addfolder__buttons>button{
+    margin-top: 18px;
+    margin-right: 12px;
+    border-radius: 2px;
+}
