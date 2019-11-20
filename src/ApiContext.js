@@ -6,5 +6,6 @@ export default React.createContext({
   handleAddFolder: () => {},
   handleAddNote: () => {},
   handleDeleteNote: () => {},
-  setShowAddForm: () => {}
+  setShowAddForm: () => {},
+  push : () => {}
 })

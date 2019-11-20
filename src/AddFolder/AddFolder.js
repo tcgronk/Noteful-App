@@ -12,7 +12,6 @@ export default class AddFolder extends React.Component {
       hasErrors: true,
       formValid:false ,
       validationMessage: "",
-      push : () => {},
       
     };
   }
@@ -114,7 +113,7 @@ export default class AddFolder extends React.Component {
         { error } 
         <br/>
         <form className="addfolder__form" onSubmit={e => this.handleSubmit(e)}>
-          <label htmlFor="folderName">Folder Name:{" "}</label>
+          <label htmlFor="folderName" >Folder Name:{" "}</label>
           <input
             required
             type="text"

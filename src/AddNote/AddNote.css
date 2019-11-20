@@ -1,21 +1,8 @@
 #content{
     height: 300px;
-    width: 75%
-.addnote__buttons>button{
-    margin-top: 18px;
-    margin-right: 12px;
-    border-radius: 2px;
+    width: 75%;
 }
 
-#content{
-    height: 150px;
-    width: 200px;
-    margin: 2px;
-}
-
-form,input, button{
-    font-size: 18px;
-}
-.addnote{
-    margin-left: 50px;
+.addlabel{
+    text-align: center
 }

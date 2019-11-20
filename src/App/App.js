@@ -20,23 +20,11 @@ class App extends Component{
         this.state = {
         notes: [],
         folders: [], 
-        showAddForm: false,
        
         }
     };
 
-    static contextType = ApiContext
-
-
-    setShowAddForm(show) {
-        this.setState({
-          showAddForm: show
-        });
-      }
-
-
-
-    
+    static contextType = ApiContext    
 
     handleDeleteNote = noteId => {
         console.log(this.state.notes)
@@ -68,7 +56,7 @@ class App extends Component{
                 console.error({error});
             });
         
-        }
+    }
 
     handleAddFolder= folder => {
         this.setState({
@@ -145,7 +133,7 @@ class App extends Component{
                 <nav className="App__nav">{this.renderNavRoutes()}</nav>
                 <header className="App__header">
                     <h1>
-                        <Link to="/">Noteful</Link>{' '}
+                        <Link to="/">Notes</Link>{' '}
                         <FontAwesomeIcon icon="check-double" />
                     </h1>
                 </header>

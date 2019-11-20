@@ -7,7 +7,7 @@ div{
 .addfolder__buttons>button,.addnote__buttons>button{
     font-size: 20px
 } 
-form, form>input, form>button, form>select, form>textarea{
+form, .addfolder>h2, .addnote>h2, form>input, form>button, form>select, form>textarea{
     font-size:20px;
     text-align: center
 }
@@ -17,15 +17,4 @@ form, form>input, form>button, form>select, form>textarea{
 
 .addfolder__form>input, .addnote__form>input{
     text-align: initial
-}
-.addfolder{
-    margin-left: 100px;
-}
-form,input, button{
-    font-size: 18px;
-}
-.addfolder__buttons>button{
-    margin-top: 18px;
-    margin-right: 12px;
-    border-radius: 2px;
 }

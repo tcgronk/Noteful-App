@@ -9,17 +9,17 @@ export default class AddNote extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      push : () => {},
-      note: {
-      name: "",
-      content: "",
-      folderId:"",
+      
+      // note: {
+      // name: "",
+      // content: "",
+      // folderId:"",
       formValid: false, 
-      titleValid: false, 
+      noteValid: false, 
       contentValid: false, 
       folderSelectValid: false,
-      validationMessage: ''
-      }
+      // validationMessage: ''
+      // }
     };
 
   }
@@ -27,63 +27,32 @@ export default class AddNote extends React.Component {
   static contextType = ApiContext
 
 
-
-
-  updateFormEntry = (e) => {       
-    let name = e.target.name;
-    const value = e.target.value;
-    let id;
-    if (e.target.selectedOptions) {
-        id = e.target.selectedOptions[0].id;
-        this.setState({
-            'folderId': id 
-        })
-    }
-    this.setState({
-        [e.target.name]: e.target.value,
-        
-    }, () => {this.validateEntry(name, value)});
-}
-
-validateEntry(name, value) {
-    let hasErrors = false;
-    value = value.trim();
-    
-    if((name === 'note') || (name === 'content')) {
-        if (value.length < 1) {
-          console.log(value.length)
-            hasErrors = true
-        } 
-
-        else {
-            hasErrors = false
-        }
-    }
-        
+validateEntry=(e)=> {
+    const value = e.target.value.trim();
+    let name=e.target.name
+    if (value.length < 1) {
+        this.setState({[`${name}Valid`]: false})
+  
+    } 
     else {
-        hasErrors = false
+      this.setState({[`${name}Valid`]: true})
+      
     }
-    
-    this.setState({
-        [`${name}Valid`]: hasErrors,
-    }, this.formValid() );
-    
+ 
+  this.formValid()
+  
 }
 
 formValid() {
-    const { noteValid, contentValid } = this.state;
-    console.log(noteValid)
-    console.log(contentValid)
-  
-    if ((noteValid=== false) && (contentValid===false)){
+    if ((this.state.noteValid=== false) || (this.state.contentValid===false) ){
         this.setState({
-            formValid: true,
+            formValid: false,
         });
     }
     else {this.setState({
-        formValid: false,
+        formValid: true,
     })}
-    console.log(this.state.formValid)
+   
   }
  
   
@@ -95,7 +64,6 @@ formValid() {
         folderId: e.target['folderSelect'].value,
         modified: new Date()
     }
-    console.log(note)
     this.setState({error: null})
     const url =`${config.API_ENDPOINT}/notes`
     const options = {
@@ -162,14 +130,14 @@ formValid() {
         <h2>Add Note</h2>
         { error }
         <form className="addnote__form" onSubmit={e => this.handleSubmit(e)}>
-          <label htmlFor="noteName">Note Name:{" "}</label>
+          <label htmlFor="noteName" >Note Name:{" "}</label>
           <input
             type="text"
             name="note"
             id="note"
             placeholder="Note Name"
             value={this.state.name}
-            onChange={e => this.updateFormEntry(e)}/>
+            onChange={e => this.validateEntry(e)}/>
           <br/>
           <label htmlFor="content"><br />Note: {" "}<br/></label>
             <textarea 
@@ -178,7 +146,7 @@ formValid() {
                 id="content"
                 placeholder="Note content"
                 value={this.state.content}
-                onChange={e => this.updateFormEntry(e)}/>
+                onChange={e => this.validateEntry(e)}/>
           <br/>
           <label htmlFor="folder-select"><br/>Folder:{" "}<br/></label>
             <select
@@ -187,15 +155,15 @@ formValid() {
             name='folderSelect'
             id='folderSelect'
             ref={this.folderSelect}
-            onChange={e => this.updateFormEntry(e)}>
-                <option value={null}>Select Folder</option>
+            onChange={e => this.validateEntry(e)}>
+                <option value={ null }>Select Folder</option>
                 { options }
             </select>
           <div className="addnote__buttons">
             <br/>
             <button type='button' onClick={e => this.handleCancelAdd()}>Cancel</button>
             <span>{' '}</span>
-            <button type="submit">Save</button>
+            <button type="submit" disabled={!this.state.formValid}>Save</button>
           {message}
           </div>  
         </form>
