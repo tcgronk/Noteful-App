@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "deploy": "now --prod ./build"
   },
   "author": "Thomas `tomatao` Hudspith-Tatham <iammotivated@gmail.com>",
   "license": "MIT",
