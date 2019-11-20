@@ -141,7 +141,7 @@ formValid() {
           <br/>
           <label htmlFor="content"><br />Note: {" "}<br/></label>
             <textarea 
-                className="field"
+                className="content"
                 name="content" 
                 id="content"
                 placeholder="Note content"
