@@ -26,18 +26,61 @@ class App extends Component{
 
     static contextType = ApiContext    
 
-    handleDeleteNote = noteId => {
-        console.log(this.state.notes)
+    handleDeleteNote = noteid => {
+       
         this.setState({
-            notes: this.state.notes.filter(note => note.id !== noteId)
-        });
-    };
+            notes: this.state.notes.filter(note => note.id !== noteid )
+          })
+        
+        }
+  
+   
+    handleAddFolder = () => {
+        fetch(`${config.API_ENDPOINT}/api/folders`, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+          }
+        })
+        .then(res => {
+          if (!res.ok)
+            return res.json().then(e => Promise.reject(e));
+          
+            return res.json()
+        })
+        .then(folders => {
+          this.setState({folders});
+        })
+        .catch(error => {
+          console.error({ error });
+        })
+      }
 
+      handleAddNote = () => {
+        fetch(`${config.API_ENDPOINT}/api/notes`, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+          }
+        })
+        .then(res => {
+          if (!res.ok)
+            return res.json().then(e => Promise.reject(e));
+          
+            return res.json()
+        })
+        .then(notes => {
+          this.setState({notes});
+        })
+        .catch(error => {
+          console.error({ error });
+        })
+      }
 
     componentDidMount() {
         Promise.all([
-            fetch(`${config.API_ENDPOINT}/notes`),
-            fetch(`${config.API_ENDPOINT}/folders`)
+            fetch(`${config.API_ENDPOINT}/api/notes`),
+            fetch(`${config.API_ENDPOINT}/api/folders`)
         ])
             .then(([notesRes, foldersRes]) => {
                 if (!notesRes.ok)
@@ -49,8 +92,7 @@ class App extends Component{
             })
             .then(([notes, folders]) => {
                 this.setState({notes, folders});
-                console.log(notes)
-                console.log(folders)
+
             })
             .catch(error => {
                 console.error({error});
@@ -58,33 +100,12 @@ class App extends Component{
         
     }
 
-    handleAddFolder= folder => {
-        this.setState({
-            folders: [
-                      ...this.state.folders, 
-                      folder
-                   ],
-              showAddForm: true
-          });
-    };
-    
 
-    handleAddNote=note =>  {
-        
-        this.setState({
-          notes: [
-                    ...this.state.notes, 
-                    note
-                 ],
-            showAddForm: true
-        });
-
-      };
 
     renderNavRoutes() {
         return (
             <>
-                {['/', '/folder/:folderId'].map(path => (
+                {['/', '/folders/:folderid'].map(path => (
                     <Route
                         exact
                         key={path}
@@ -92,9 +113,8 @@ class App extends Component{
                         component={NoteListNav}
                     />
                 ))}
-                <Route path="/note/:noteId" component={NotePageNav} />
-                <Route exact path="/add-folder" component={NotePageNav} />
-                <Route path="/add-note" component={NotePageNav} />
+                <Route exact path="/api/folders/:folderid" component={NotePageNav} />
+                <Route exact path="/api/notes/:noteid" component={NotePageNav} />
             </>
         );
     }
@@ -102,7 +122,7 @@ class App extends Component{
     renderMainRoutes() {
         return (
             <>
-                {['/', '/folder/:folderId'].map(path => (
+                {['/', '/api/folders/:folderid'].map(path => (
                     <Route
                         exact
                         key={path}
@@ -112,7 +132,9 @@ class App extends Component{
                 ))}
 
                 <ErrorBoundary >
-                <Route path="/note/:noteId" component={NotePageMain} />
+                {['/api/notes/:noteid', '/api/folders/api/notes/:noteid'].map(path => (
+                <Route key={path} path={path} component={NotePageMain} />
+                ))}
                 </ErrorBoundary>
                 <Route path="/add-folder" component={AddFolder} />
                 <Route path="/add-note" component={AddNote} />

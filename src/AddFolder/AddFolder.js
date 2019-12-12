@@ -8,7 +8,7 @@ export default class AddFolder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      foldername: '',
       hasErrors: true,
       formValid:false ,
       validationMessage: "",
@@ -20,13 +20,13 @@ export default class AddFolder extends React.Component {
 
 
   validateEntry(e) {
-    let name=e.target.value
-    let length = name.trim();
+    let foldername=e.target.value
+    let length = foldername.trim();
     let folders=this.context.folders
     for(let i=0; i<folders.length; i++){
-      if(name===folders[i].name){
+      if(foldername===folders[i].foldername){
         this.setState({
-          validationMessage:`Folder Name must be at least 1 character.`,
+          validationMessage:`Folder Name cannot match another folder.`,
           hasErrors:true,
           formValid:false
         })
@@ -42,7 +42,8 @@ export default class AddFolder extends React.Component {
     }
 
     else this.setState({
-        validationMessage: 'Valid Entry',
+        foldername: foldername,
+        validationMessage: 'Sumbit Folder Name',
         hasErrors: false,
         formValid:true
     })
@@ -56,8 +57,8 @@ export default class AddFolder extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const folder = {name:e.target['folder'].value}
-    const url =`${config.API_ENDPOINT}/folders`
+    const folder = {foldername:this.state.foldername}
+    const url =`${config.API_ENDPOINT}/api/folders`
     const options = {
       method: 'POST',
       body: JSON.stringify(folder),
@@ -68,17 +69,15 @@ export default class AddFolder extends React.Component {
     
     if(this.state.hasErrors===false){
     fetch(url, options)
-      .then(console.log(url,options))
       .then(res => {
         if(!res.ok) {
-          throw new Error('Something went wrong, please try again later');
+          return res.json().then(e => Promise.reject(e))
         }
-        return res.json();
+        return res.json()
       })
-     
-      .then(folder => {
-          this.context.handleAddFolder(folder);
-          this.props.history.push(`/folder/${folder.id}`)
+      .then(() => {
+          this.context.handleAddFolder()
+          this.props.history.push(`/`)
           this.setState({
             validationMessage: 'Saved!'
           });
@@ -101,7 +100,7 @@ export default class AddFolder extends React.Component {
     const error = this.state.validationMessage
     const folders=[]
     for (let i=0; i<this.context.folders.length; i++){
-      folders.push(this.context.folders[i].name)
+      folders.push(this.context.folders[i].foldername)
     }
     const foldersArray=folders.map((folder)=> {
     return(<li>{folder}</li>)})

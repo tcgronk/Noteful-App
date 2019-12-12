@@ -10,10 +10,7 @@ export default class AddNote extends React.Component {
     super(props);
     this.state = {
       
-      // note: {
-      // name: "",
-      // content: "",
-      // folderId:"",
+
       formValid: false, 
       noteValid: false, 
       contentValid: false, 
@@ -59,13 +56,13 @@ formValid() {
   handleSubmit(e) {
     e.preventDefault();
     const note = {
-        name: e.target['note'].value,
+        notename: e.target['note'].value,
         content: e.target['content'].value,
-        folderId: e.target['folderSelect'].value,
+        folderid: e.target['folderSelect'].value,
         modified: new Date()
     }
     this.setState({error: null})
-    const url =`${config.API_ENDPOINT}/notes`
+    const url =`${config.API_ENDPOINT}/api/notes`
     const options = {
       method: 'POST',
       body: JSON.stringify(note),
@@ -73,21 +70,19 @@ formValid() {
         "Content-Type": "application/json",
       }
     };
-    console.log(this.state.formValid)
     if(this.state.formValid===true){
     fetch(url, options)
       .then(res => {
         if(!res.ok) {
-          throw new Error('Something went wrong, please try again later');
+          return res.json().then(e => Promise.reject(e))
         }
-        return res.json();
+        return res.json()
       })
       
       .then(note => {
         this.context.handleAddNote(note);
-
-        this.props.history.push(`/folder/${note.folderId}`)
-        console.log('saved')
+        this.props.history.push(`/`)
+        
       })
       .catch(err => {
         this.setState({
@@ -115,9 +110,9 @@ formValid() {
     const options = folders.map((folder) => {
       return(
         <option
-          key= {folder.id}
-          value = {folder.id}>
-          {folder.name}
+          key= {folder.folderid}
+          value = {folder.folderid}>
+          {folder.foldername}
         </option>
       )
     })
@@ -143,6 +138,7 @@ formValid() {
             <textarea 
                 className="content"
                 name="content" 
+                type="text"
                 id="content"
                 placeholder="Note content"
                 value={this.state.content}
