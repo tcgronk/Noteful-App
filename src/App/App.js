@@ -6,6 +6,8 @@ import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
+import Note from '../Note/Note';
+
 import ApiContext from '../ApiContext'
 import config from './config'
 import './App.css';
@@ -132,8 +134,10 @@ class App extends Component{
                 ))}
 
                 <ErrorBoundary >
+                {/* {['/api/notes/:noteid', '/api/folders/api/notes/:noteid'].map(path => ( */}
                 {['/api/notes/:noteid', '/api/folders/api/notes/:noteid'].map(path => (
                 <Route key={path} path={path} component={NotePageMain} />
+
                 ))}
                 </ErrorBoundary>
                 <Route path="/add-folder" component={AddFolder} />

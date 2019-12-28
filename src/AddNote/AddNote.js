@@ -131,7 +131,7 @@ formValid() {
             name="note"
             id="note"
             placeholder="Note Name"
-            value={this.state.name}
+            value={this.name}
             onChange={e => this.validateEntry(e)}/>
           <br/>
           <label htmlFor="content"><br />Note: {" "}<br/></label>
@@ -141,7 +141,7 @@ formValid() {
                 type="text"
                 id="content"
                 placeholder="Note content"
-                value={this.state.content}
+                value={this.content}
                 onChange={e => this.validateEntry(e)}/>
           <br/>
           <label htmlFor="folder-select"><br/>Folder:{" "}<br/></label>

@@ -30,6 +30,7 @@ export default class NoteListMain extends React.Component {
                 id={note.id}
                 name={note.notename}
                 modified={note.modified}
+                link={true}
               />
              
             </li>

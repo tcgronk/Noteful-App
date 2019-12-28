@@ -19,7 +19,7 @@ export default class AddFolder extends React.Component {
   static contextType = ApiContext
 
 
-  validateEntry(e) {
+  validateEntry=(e)=> {
     let foldername=e.target.value
     let length = foldername.trim();
     let folders=this.context.folders

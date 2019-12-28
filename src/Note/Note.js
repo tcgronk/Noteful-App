@@ -7,6 +7,12 @@ import config from '../config'
 import './Note.css'
 
 export default class Note extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={
+      link: this.props.link
+    }
+  }
   static defaultProps ={
     onDeleteNote: () => {},
   }
@@ -40,18 +46,26 @@ export default class Note extends React.Component {
 
   }
 
+  disableLink=()=>{
+    if(this.state.link===true){
+      this.setState({link: false})
+    }
+    else(this.setState({link: true}))
+  }
 
 
   render() {
-    const { name,id, modified } = this.props
+    console.log(this.state.link)
+    const { name,id, modified,link } = this.props
     return (
       <div className='Note'>
-        <h2 className='Note__title'>
-          <Link to={`api/notes/${id}`}>
-            {name}
-            
-          </Link>
-        </h2>
+       
+          {(this.state.link===true)
+           ?  <h2 className='Note__title'><Link to={`api/notes/${id}`} onClick={this.disableLink}>{name}</Link></h2>
+           :  <h2 className='Note__title'>{name}</h2>
+          }
+        
+        
         <button
           className='Note__delete'
           type='button'
