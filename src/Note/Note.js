@@ -46,6 +46,7 @@ export default class Note extends React.Component {
 
   }
 
+
   disableLink=()=>{
     if(this.state.link===true){
       this.setState({link: false})
